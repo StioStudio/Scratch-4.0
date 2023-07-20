@@ -1,3 +1,15 @@
+function updateJS(_element) {
+    let rem = _element;
+    // let rem = document.createElement("includeHTML");
+    let a = rem.querySelectorAll("script")
+    for (let i = 0; i < a.length; i++) {
+        let b = document.createElement("script");
+        b.innerHTML = a[i].innerHTML
+        a[i].replaceWith(b);
+    }
+    return rem;
+}
+const parser = new DOMParser();
 function includeHTML() {
     const parser = new DOMParser();
     var z, i, elmnt, file, xhttp;
@@ -14,10 +26,15 @@ function includeHTML() {
                 if (this.readyState == 4) {
                     // elmnt = document.createElement("div");
                     if (this.status == 200) {
-                        elmnt.outerHTML = this.responseText
+                        elmnt.replaceWith(updateJS(parser.parseFromString(this.responseText, 'text/html').querySelector("includeHTML")))
+                        // let rem = document.createElement("script")
+                        // rem.innerHTML = `
+                        // console.log("hello")
+                        // `
+                        // elmnt.replaceWith(rem)
                     }
                     if (this.status == 404) {
-                        elmnt.outerHTML = "Page not found.";
+                        elmnt.append("Page not found.");
                     }
                     /*remove the attribute, and call this function once more:*/
                     includeHTML();
